@@ -1,6 +1,6 @@
-##nginx+php-fpm+memcached
+## nginx+php-fpm+memcached
 
-###Запуск
+### Запуск
 ```
 make build
 make up
