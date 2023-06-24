@@ -5,7 +5,13 @@ $memcached->addServer('jm-memcached2', 11211);
 $memcached->addServer('jm-memcached3', 11211);
 
 $num = $_GET['num'];
-$user = $_GET['user'] ?: 'admin';
+$user = 'user';
+
+session_start();
+
+if (!isset($_SESSION['user_' . $user])) {
+    $_SESSION['user_' . $user] = $user;
+}
 
 function fib($a)
 {
@@ -35,9 +41,9 @@ if ($memcached->get('fibKey')) {
 // число рассчитывается и кешируются, Пользователь 1 при следующих запросах получает быстрый ответ.
 // При этом Пользователь 2 рассчитает число фибоначи для себя снова несмотря на остальных.
 
-if ($memcached->get($user)) {
-    echo $memcached->get($user);
+if ($memcached->get($_SESSION['user_' . $user])) {
+    echo $memcached->get($_SESSION['user_' . $user]);
 } else {
-    $memcached->add($user, fib($num), 300);
-    echo $memcached->get($user);
+    $memcached->add($_SESSION['user_' . $user], fib($num), 300);
+    echo $memcached->get($_SESSION['user_' . $user]);
 }
